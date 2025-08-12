@@ -8,7 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       host: 'aws-0-sa-east-1.pooler.supabase.com',
       port: +'5432',
       username: 'postgres.uccayukjjrvnsnotfxhz',
-      password: '081220Dudu',
+      password: 'senha',
       autoLoadEntities: true,
       database: 'postgres',
     }),
