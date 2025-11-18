@@ -17,6 +17,7 @@ export class ProductService {
     } else {
       return this.repository.find({
         where: { category: category },
+        relations: ['category'],
       });
     }
   }
