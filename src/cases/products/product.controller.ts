@@ -15,7 +15,7 @@ import {
 import { Product } from './product.entity';
 import { ProductService } from './product.service';
 import { CategoryService } from '../categories/category.service';
-@Controller('categories')
+@Controller('products')
 export class ProductController {
   constructor(
     private readonly categoryService: CategoryService,
