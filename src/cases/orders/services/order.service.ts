@@ -1,8 +1,7 @@
 import { Repository } from 'typeorm';
+import { Order } from '../entities/order.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
-import { Order } from './entities/order.entity';
-import { Customer } from '../customer/customer.entity';
 
 @Injectable()
 export class OrderService {
@@ -11,15 +10,8 @@ export class OrderService {
     private repository: Repository<Order>,
   ) {}
 
-  findAll(customer?: Customer | null): Promise<Order[]> {
-    if (!customer) {
-      return this.repository.find();
-    } else {
-      return this.repository.find({
-        where: { customer: customer },
-        relations: ['customer'],
-      });
-    }
+  findAll(): Promise<Order[]> {
+    return this.repository.find();
   }
 
   findById(id: string): Promise<Order | null> {
@@ -27,12 +19,6 @@ export class OrderService {
   }
 
   save(order: Order): Promise<Order> {
-    const total = order.items.reduce((sum, item) => {
-      return sum + Number(item.quantity) * Number(item.value);
-    }, 0);
-
-    order.total = total;
-
     return this.repository.save(order);
   }
 

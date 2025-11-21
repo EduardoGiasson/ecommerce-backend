@@ -1,4 +1,3 @@
-import { Customer } from 'src/cases/customer/customer.entity';
 import {
   Column,
   CreateDateColumn,
@@ -9,12 +8,13 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { OrderItem } from './order-item.entity';
+import { Customer } from 'src/cases/customer/customer.entity';
 
 enum OrderStatus {
   NEW = 'NEW',
   SEPARATION = 'SEPARATION',
   INVOICED = 'INVOICED',
-  SHIPPED = 'INVOICED',
+  SHIPPED = 'SHIPPED',
   DELIVERED = 'DELIVERED',
   CANCELED = 'CANCELED',
 }
@@ -30,7 +30,11 @@ export class Order {
   @Column('decimal', { nullable: false, precision: 10, scale: 2 })
   shipping: number;
 
-  @Column('enum', { enum: OrderStatus, default: OrderStatus.NEW })
+  @Column('enum', {
+    nullable: false,
+    enum: OrderStatus,
+    default: OrderStatus.NEW,
+  })
   status: string;
 
   @Column('decimal', { nullable: false, precision: 10, scale: 2 })
@@ -43,7 +47,7 @@ export class Order {
   items: OrderItem[];
 
   @CreateDateColumn()
-  createAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
