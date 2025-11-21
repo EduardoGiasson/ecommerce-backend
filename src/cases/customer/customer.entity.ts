@@ -6,15 +6,18 @@ export class Customer {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ length: 60, nullable: false })
+  @Column({ nullable: false, length: 60 })
   name: string;
 
-  @Column({ length: 250, nullable: false })
+  @Column({ length: 250 })
   address: string;
 
-  @Column({ length: 8, nullable: false })
+  @Column({ length: 8 })
   zipcode: string;
 
-  @ManyToOne(() => City, { eager: true, nullable: false })
-  state: City;
+  @ManyToOne(() => City, { eager: true })
+  city: City;
+
+  @Column({ nullable: true })
+  userId: string;
 }
