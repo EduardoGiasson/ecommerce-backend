@@ -7,6 +7,8 @@ import { ProductModule } from './cases/products/product.module';
 import { CityModule } from './cases/cities/city.module';
 import { CustomerModule } from './cases/customer/customer.module';
 import { OrderModule } from './cases/orders/order.module';
+import { FavoriteModule } from './cases/favorites/favorite.module';
+import { ReviewModule } from './cases/reviews/review.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { OrderModule } from './cases/orders/order.module';
     CityModule,
     CustomerModule,
     OrderModule,
+    FavoriteModule,
+    ReviewModule,
   ],
 })
 export class AppModule {}
