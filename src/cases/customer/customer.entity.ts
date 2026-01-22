@@ -20,4 +20,9 @@ export class Customer {
 
   @Column({ nullable: true })
   userId: string;
+
+  @Column({ type: 'int', default: 0 })
+  nivelConta: number;
+
+
 }
