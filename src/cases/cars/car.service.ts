@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Repository, DeepPartial } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { Category } from '../categories/category.entity';
@@ -14,19 +14,22 @@ export class CarService {
   findAll(category?: Category | null): Promise<Car[]> {
     if (!category) {
       return this.repository.find();
-    } else {
-      return this.repository.find({
-        where: { category: category },
-        relations: ['category'],
-      });
     }
+
+    return this.repository.find({
+      where: { category },
+      relations: ['category', 'brand'],
+    });
   }
 
   findById(id: string): Promise<Car | null> {
-    return this.repository.findOneBy({ id: id });
+    return this.repository.findOne({
+      where: { id },
+      relations: ['category', 'brand'],
+    });
   }
 
-  save(car: Car): Promise<Car> {
+  save(car: DeepPartial<Car>): Promise<Car> {
     return this.repository.save(car);
   }
 

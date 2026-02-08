@@ -13,9 +13,6 @@ export class Car {
   @Column('text', { nullable: true })
   description: string;
 
-  @Column('decimal', { nullable: false, precision: 10, scale: 2 })
-  price: number;
-
   @Column('boolean', { nullable: false, default: true })
   active: boolean;
 

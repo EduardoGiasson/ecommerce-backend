@@ -18,7 +18,6 @@ import { validate as isUUID } from 'uuid';
 import { CarService } from './car.service';
 import { Car } from './car.entity';
 
-
 @Controller('cars')
 export class CarController {
   constructor(
@@ -53,20 +52,20 @@ export class CarController {
   }
 
   @Put(':id')
-  async update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() car: Car,
-  ): Promise<Car> {
-    const found = await this.service.findById(id);
+async update(
+  @Param('id', ParseUUIDPipe) id: string,
+  @Body() car: Car,
+): Promise<Car> {
+  const found = await this.service.findById(id);
 
-    if (!found) {
-      throw new HttpException('Car not found', HttpStatus.NOT_FOUND);
-    }
-
-    car.id = id;
-
-    return this.service.save(car);
+  if (!found) {
+    throw new HttpException('Car not found', HttpStatus.NOT_FOUND);
   }
+
+  car.id = id;
+  return this.service.save(car);
+}
+
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -77,6 +76,6 @@ export class CarController {
       throw new HttpException('Car not found', HttpStatus.NOT_FOUND);
     }
 
-    return this.service.remove(id);
+    await this.service.remove(id);
   }
 }
