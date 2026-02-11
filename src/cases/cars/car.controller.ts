@@ -10,28 +10,17 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
-  Query,
 } from '@nestjs/common';
 
-import { CategoryService } from '../categories/category.service';
-import { validate as isUUID } from 'uuid';
 import { CarService } from './car.service';
 import { Car } from './car.entity';
 
 @Controller('cars')
 export class CarController {
-  constructor(
-    private readonly categoryService: CategoryService,
-    private readonly service: CarService,
-  ) {}
+  constructor(private readonly service: CarService) {}
 
   @Get()
-  async find(@Query('categoryId') categoryId: string): Promise<Car[]> {
-    if (categoryId && isUUID(categoryId)) {
-      const category = await this.categoryService.findById(categoryId);
-      return this.service.findAll(category);
-    }
-
+  find(): Promise<Car[]> {
     return this.service.findAll();
   }
 
@@ -46,26 +35,26 @@ export class CarController {
     return found;
   }
 
+  // CREATE (NUNCA recebe id)
   @Post()
-  create(@Body() car: Car): Promise<Car> {
-    return this.service.save(car);
+  create(@Body() car: Omit<Car, 'id'>): Promise<Car> {
+    return this.service.create(car);
   }
 
+  // UPDATE (id vem só pela URL)
   @Put(':id')
-async update(
-  @Param('id', ParseUUIDPipe) id: string,
-  @Body() car: Car,
-): Promise<Car> {
-  const found = await this.service.findById(id);
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() car: Partial<Car>,
+  ): Promise<Car> {
+    const found = await this.service.findById(id);
 
-  if (!found) {
-    throw new HttpException('Car not found', HttpStatus.NOT_FOUND);
+    if (!found) {
+      throw new HttpException('Car not found', HttpStatus.NOT_FOUND);
+    }
+
+    return this.service.update(id, car);
   }
-
-  car.id = id;
-  return this.service.save(car);
-}
-
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)

@@ -1,27 +1,22 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Category } from '../categories/category.entity';
-import { Brand } from '../brands/brand.entity';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('car')
+@Entity('cars')
 export class Car {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: false })
+  @Column()
   name: string;
 
-  @Column('text', { nullable: true })
+  @Column({ nullable: true })
   description: string;
-
-  @Column('boolean', { nullable: false, default: true })
-  active: boolean;
-
-  @ManyToOne(() => Category, { eager: true, nullable: false })
-  category: Category;
-
-  @ManyToOne(() => Brand, { eager: true, nullable: true })
-  brand: Brand;
 
   @Column({ nullable: true })
   imageUrl: string;
+
+  @Column({ default: true })
+  active: boolean;
+
+  @Column({ nullable: true })
+  brand: string;
 }
