@@ -10,6 +10,7 @@ import { OrderModule } from './cases/orders/order.module';
 import { FavoriteModule } from './cases/favorites/favorite.module';
 import { ReviewModule } from './cases/reviews/review.module';
 import { CarModule } from './cases/cars/car.module';
+import { EletroPostoModule } from './cases/eletropostos/eletroposto.module';
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { CarModule } from './cases/cars/car.module';
     OrderModule,
     FavoriteModule,
     ReviewModule,
-    CarModule
+    CarModule,
+    EletroPostoModule
   ],
 })
 export class AppModule {}
