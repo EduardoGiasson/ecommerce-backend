@@ -39,12 +39,12 @@ export class EletroPostoService {
     if (!customer)
       throw new NotFoundException('Customer não encontrado');
 
-    const eletroposto = this.repository.create(); // <- importante
+    const eletroposto = this.repository.create();
 
     eletroposto.name = data.name;
-    eletroposto.description = data.description;
+    eletroposto.endereco = data.endereco;
     eletroposto.imageUrl = data.imageUrl;
-    eletroposto.brand = data.brand;
+    eletroposto.potencia = data.potencia;
     eletroposto.active = data.active ?? true;
     eletroposto.customer = customer;
 
@@ -67,9 +67,9 @@ export class EletroPostoService {
     }
 
     if (data.name !== undefined) eletroposto.name = data.name;
-    if (data.description !== undefined) eletroposto.description = data.description;
+    if (data.endereco !== undefined) eletroposto.endereco = data.endereco;
     if (data.imageUrl !== undefined) eletroposto.imageUrl = data.imageUrl;
-    if (data.brand !== undefined) eletroposto.brand = data.brand;
+    if (data.potencia !== undefined) eletroposto.potencia = data.potencia;
     if (data.active !== undefined) eletroposto.active = data.active;
 
     return this.repository.save(eletroposto);
