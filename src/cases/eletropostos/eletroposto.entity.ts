@@ -10,7 +10,19 @@ export class EletroPosto {
   name: string;
 
   @Column({ nullable: true })
-  endereco: string;
+  cidade: string;
+
+  @Column({ nullable: true })
+  bairro: string;
+
+  @Column({ nullable: true })
+  rua: string;
+
+  @Column({ nullable: true })
+  numero: string;
+
+  @Column({ nullable: true })
+  cep: string;
 
   @Column('float')
   potencia: number;
@@ -19,7 +31,7 @@ export class EletroPosto {
   imageUrl: string;
 
   @Column({ default: true })
-  active: boolean;
+  active: boolean; // <-- adicionado
 
   @ManyToOne(() => Customer, { eager: true, nullable: false })
   customer: Customer;

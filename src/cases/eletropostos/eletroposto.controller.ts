@@ -1,3 +1,4 @@
+import { EletroPostoDTO } from './../../../../ecommerce-shop/src/cases/eletroposto/dtos/eletropostos.dto';
 import {
   Body,
   Controller,
@@ -11,31 +12,30 @@ import {
   Put,
 } from '@nestjs/common';
 import { EletroPostoService } from './eletroposto.service';
-import { EletroPosto } from './eletroposto.entity';
 
 @Controller('eletropostos')
 export class EletroPostoController {
   constructor(private readonly service: EletroPostoService) {}
 
   @Get()
-  find(): Promise<EletroPosto[]> {
+  find(): Promise<EletroPostoDTO[]> {
     return this.service.findAll();
   }
 
   @Get('customer/:customerId')
   findByCustomer(
     @Param('customerId', ParseUUIDPipe) customerId: string,
-  ): Promise<EletroPosto[]> {
+  ): Promise<EletroPostoDTO[]> {
     return this.service.findByCustomer(customerId);
   }
 
   @Get(':id')
-  findById(@Param('id', ParseUUIDPipe) id: string): Promise<EletroPosto> {
+  findById(@Param('id', ParseUUIDPipe) id: string): Promise<EletroPostoDTO> {
     return this.service.findById(id);
   }
 
   @Post()
-  create(@Body() body: any): Promise<EletroPosto> {
+  create(@Body() body: any): Promise<EletroPostoDTO> {
     return this.service.create(body);
   }
 
@@ -43,7 +43,7 @@ export class EletroPostoController {
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() body: any,
-  ): Promise<EletroPosto> {
+  ): Promise<EletroPostoDTO> {
     return this.service.update(id, body);
   }
 

@@ -1,6 +1,10 @@
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { EletroPosto } from './eletroposto.entity';
 import { Customer } from '../customer/customer.entity';
 
@@ -14,15 +18,19 @@ export class EletroPostoService {
     private customerRepository: Repository<Customer>,
   ) {}
 
+  // LISTAR TODOS
   findAll(): Promise<EletroPosto[]> {
-    return this.repository.find();
+    return this.repository.find({ relations: ['customer'] });
   }
 
+  // BUSCAR POR ID
   async findById(id: string): Promise<EletroPosto> {
-    const eletroposto = await this.repository.findOne({ where: { id } });
+    const eletroposto = await this.repository.findOne({
+      where: { id },
+      relations: ['customer'],
+    });
 
-    if (!eletroposto)
-      throw new NotFoundException('EletroPosto não encontrado');
+    if (!eletroposto) throw new NotFoundException('EletroPosto não encontrado');
 
     return eletroposto;
   }
@@ -35,18 +43,19 @@ export class EletroPostoService {
     const customer = await this.customerRepository.findOne({
       where: { id: data.customerId },
     });
+    if (!customer) throw new NotFoundException('Customer não encontrado');
 
-    if (!customer)
-      throw new NotFoundException('Customer não encontrado');
-
-    const eletroposto = this.repository.create();
-
-    eletroposto.name = data.name;
-    eletroposto.endereco = data.endereco;
-    eletroposto.imageUrl = data.imageUrl;
-    eletroposto.potencia = data.potencia;
-    eletroposto.active = data.active ?? true;
-    eletroposto.customer = customer;
+    const eletroposto = this.repository.create({
+      name: data.name,
+      cidade: data.cidade,
+      bairro: data.bairro,
+      rua: data.rua,
+      numero: data.numero,
+      cep: data.cep,
+      potencia: data.potencia,
+      imageUrl: data.imageUrl,
+      customer,
+    });
 
     return this.repository.save(eletroposto);
   }
@@ -59,22 +68,23 @@ export class EletroPostoService {
       const customer = await this.customerRepository.findOne({
         where: { id: data.customerId },
       });
-
-      if (!customer)
-        throw new NotFoundException('Customer não encontrado');
-
+      if (!customer) throw new NotFoundException('Customer não encontrado');
       eletroposto.customer = customer;
     }
 
     if (data.name !== undefined) eletroposto.name = data.name;
-    if (data.endereco !== undefined) eletroposto.endereco = data.endereco;
-    if (data.imageUrl !== undefined) eletroposto.imageUrl = data.imageUrl;
+    if (data.cidade !== undefined) eletroposto.cidade = data.cidade;
+    if (data.bairro !== undefined) eletroposto.bairro = data.bairro;
+    if (data.rua !== undefined) eletroposto.rua = data.rua;
+    if (data.numero !== undefined) eletroposto.numero = data.numero;
+    if (data.cep !== undefined) eletroposto.cep = data.cep;
     if (data.potencia !== undefined) eletroposto.potencia = data.potencia;
-    if (data.active !== undefined) eletroposto.active = data.active;
+    if (data.imageUrl !== undefined) eletroposto.imageUrl = data.imageUrl;
 
     return this.repository.save(eletroposto);
   }
 
+  // DELETE
   async remove(id: string): Promise<void> {
     await this.findById(id);
     await this.repository.delete(id);
@@ -84,6 +94,7 @@ export class EletroPostoService {
   async findByCustomer(customerId: string): Promise<EletroPosto[]> {
     return this.repository.find({
       where: { customer: { id: customerId } },
+      relations: ['customer'],
     });
   }
 }
