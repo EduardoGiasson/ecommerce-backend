@@ -12,6 +12,7 @@ import { ReviewModule } from './cases/reviews/review.module';
 import { CarModule } from './cases/cars/car.module';
 import { EletroPostoModule } from './cases/eletropostos/eletroposto.module';
 import { AgendamentoModule } from './cases/agendamentos/agendamento.module';
+import { FormulaModule } from './cases/formula/formula.module';
 
 @Module({
   imports: [
@@ -38,7 +39,8 @@ import { AgendamentoModule } from './cases/agendamentos/agendamento.module';
     ReviewModule,
     CarModule,
     EletroPostoModule,
-    AgendamentoModule
+    AgendamentoModule,
+    FormulaModule
   ],
 })
 export class AppModule {}
