@@ -1,45 +1,30 @@
-// formula.service.ts
+import { Injectable } from '@nestjs/common';
 
-import {
-  Injectable,
-} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
-import {
-  InjectRepository,
-} from '@nestjs/typeorm';
-
-import {
-  DeepPartial,
-  Repository,
-} from 'typeorm';
-
-import { Formula } from './formula.entity';
+import { DeepPartial, Repository } from 'typeorm';
+import { TransacaoCreditos } from './formula.entity';
 
 @Injectable()
-export class FormulaService {
-
+export class TransacaoCreditosService {
   constructor(
-
-    @InjectRepository(Formula)
-
-    private repository:
-      Repository<Formula>,
+    @InjectRepository(TransacaoCreditos)
+    private repository: Repository<TransacaoCreditos>,
   ) {}
 
   /* ================= LIST ================= */
 
-  findAll():
-    Promise<Formula[]> {
-
-    return this.repository.find();
+  findAll(): Promise<TransacaoCreditos[]> {
+    return this.repository.find({
+      order: {
+        criado_em: 'DESC',
+      },
+    });
   }
 
   /* ================= FIND BY ID ================= */
 
-  findById(
-    id: string,
-  ): Promise<Formula | null> {
-
+  findById(id: string): Promise<TransacaoCreditos | null> {
     return this.repository.findOne({
       where: { id },
     });
@@ -48,101 +33,65 @@ export class FormulaService {
   /* ================= CREATE ================= */
 
   async create(
-    data: DeepPartial<Formula>,
-  ): Promise<Formula> {
-
-    const creditos =
-
-      data.possui_painel_solar
-
-        ? (data.energia_kwh || 0) *
-          (data.fator_credito || 0)
-
-        : 0;
+    data: DeepPartial<TransacaoCreditos>,
+  ): Promise<TransacaoCreditos> {
+    const creditos = data.possui_painel_solar
+      ? (data.energia_consumida_kwh || 0) * (data.fator_credito || 0)
+      : 0;
 
     const valorTotal =
+      (data.energia_consumida_kwh || 0) * (data.valor_kwh || 0);
 
-      (data.energia_kwh || 0) *
-      (data.valor_kwh || 0);
+    const transacao = this.repository.create({
+      ...data,
 
-    const formula =
-      this.repository.create({
+      creditos_gerados: creditos,
 
-        ...data,
+      valor_total: valorTotal,
+    });
 
-        creditos_gerados:
-          creditos,
-
-        valor_total:
-          valorTotal,
-      });
-
-    return this.repository.save(
-      formula,
-    );
+    return this.repository.save(transacao);
   }
 
   /* ================= UPDATE ================= */
 
   async update(
     id: string,
-    data: DeepPartial<Formula>,
-  ): Promise<Formula> {
 
-    const formula =
-      await this.findById(id);
+    data: DeepPartial<TransacaoCreditos>,
+  ): Promise<TransacaoCreditos> {
+    const transacao = await this.findById(id);
 
-    if (!formula) {
-      throw new Error(
-        'Formula não encontrada',
-      );
+    if (!transacao) {
+      throw new Error('Transação não encontrada');
     }
 
     const energia =
-      data.energia_kwh ??
-      formula.energia_kwh;
+      data.energia_consumida_kwh ?? transacao.energia_consumida_kwh;
 
-    const fator =
-      data.fator_credito ??
-      formula.fator_credito;
+    const fator = data.fator_credito ?? transacao.fator_credito;
 
-    const valorKwh =
-      data.valor_kwh ??
-      formula.valor_kwh;
+    const valorKwh = data.valor_kwh ?? transacao.valor_kwh;
 
     const painelSolar =
-      data.possui_painel_solar ??
-      formula.possui_painel_solar;
+      data.possui_painel_solar ?? transacao.possui_painel_solar;
 
-    const creditos =
-      painelSolar
-        ? energia * fator
-        : 0;
+    const creditos = painelSolar ? energia * fator : 0;
 
-    const valorTotal =
-      energia * valorKwh;
+    const valorTotal = energia * valorKwh;
 
-    await this.repository.update(
-      id,
-      {
+    await this.repository.update(id, {
+      ...data,
 
-        ...data,
+      creditos_gerados: creditos,
 
-        creditos_gerados:
-          creditos,
+      valor_total: valorTotal,
+    });
 
-        valor_total:
-          valorTotal,
-      },
-    );
-
-    const updated =
-      await this.findById(id);
+    const updated = await this.findById(id);
 
     if (!updated) {
-      throw new Error(
-        'Formula não encontrada',
-      );
+      throw new Error('Transação não encontrada');
     }
 
     return updated;
@@ -150,10 +99,7 @@ export class FormulaService {
 
   /* ================= DELETE ================= */
 
-  async remove(
-    id: string,
-  ): Promise<void> {
-
+  async remove(id: string): Promise<void> {
     await this.repository.delete(id);
   }
 }

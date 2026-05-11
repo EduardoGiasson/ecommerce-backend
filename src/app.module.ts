@@ -12,7 +12,7 @@ import { ReviewModule } from './cases/reviews/review.module';
 import { CarModule } from './cases/cars/car.module';
 import { EletroPostoModule } from './cases/eletropostos/eletroposto.module';
 import { AgendamentoModule } from './cases/agendamentos/agendamento.module';
-import { FormulaModule } from './cases/formula/formula.module';
+import { TransacaoCreditosModule } from './cases/formula/formula.module';
 
 @Module({
   imports: [
@@ -40,7 +40,7 @@ import { FormulaModule } from './cases/formula/formula.module';
     CarModule,
     EletroPostoModule,
     AgendamentoModule,
-    FormulaModule
+    TransacaoCreditosModule,
   ],
 })
 export class AppModule {}

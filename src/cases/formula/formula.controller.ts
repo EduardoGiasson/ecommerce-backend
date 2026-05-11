@@ -1,5 +1,3 @@
-// formula.controller.ts
-
 import {
   Body,
   Controller,
@@ -13,54 +11,32 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { TransacaoCreditosService } from './formula.service';
+import { TransacaoCreditos } from './formula.entity';
 
-import { FormulaService }
-  from './formula.service';
-
-import { Formula }
-  from './formula.entity';
-
-@Controller('formula')
-export class FormulaController {
-
-  constructor(
-    private readonly service:
-      FormulaService,
-  ) {}
+@Controller('transacoes-creditos')
+export class TransacaoCreditosController {
+  constructor(private readonly service: TransacaoCreditosService) {}
 
   /* ================= LIST ================= */
 
   @Get()
-  find():
-    Promise<Formula[]> {
-
+  find(): Promise<TransacaoCreditos[]> {
     return this.service.findAll();
   }
 
   /* ================= FIND BY ID ================= */
 
   @Get(':id')
-
   async findById(
-
-    @Param(
-      'id',
-      ParseUUIDPipe,
-    )
-
+    @Param('id', ParseUUIDPipe)
     id: string,
-
-  ): Promise<Formula> {
-
-    const found =
-      await this.service
-        .findById(id);
+  ): Promise<TransacaoCreditos> {
+    const found = await this.service.findById(id);
 
     if (!found) {
-
       throw new HttpException(
-
-        'Formula not found',
+        'Transação não encontrada',
 
         HttpStatus.NOT_FOUND,
       );
@@ -72,91 +48,49 @@ export class FormulaController {
   /* ================= CREATE ================= */
 
   @Post()
-
   create(
-
     @Body()
-
-    formula:
-      Omit<
-        Formula,
-        'id'
-      >,
-
-  ): Promise<Formula> {
-
-    return this.service
-      .create(formula);
+    transacao: Omit<TransacaoCreditos, 'id'>,
+  ): Promise<TransacaoCreditos> {
+    return this.service.create(transacao);
   }
 
   /* ================= UPDATE ================= */
 
   @Put(':id')
-
   async update(
-
-    @Param(
-      'id',
-      ParseUUIDPipe,
-    )
-
+    @Param('id', ParseUUIDPipe)
     id: string,
 
     @Body()
-
-    formula:
-      Partial<Formula>,
-
-  ): Promise<Formula> {
-
-    const found =
-      await this.service
-        .findById(id);
+    transacao: Partial<TransacaoCreditos>,
+  ): Promise<TransacaoCreditos> {
+    const found = await this.service.findById(id);
 
     if (!found) {
-
       throw new HttpException(
-
-        'Formula not found',
+        'Transação não encontrada',
 
         HttpStatus.NOT_FOUND,
       );
     }
 
-    return this.service.update(
-      id,
-      formula,
-    );
+    return this.service.update(id, transacao);
   }
 
   /* ================= DELETE ================= */
 
   @Delete(':id')
-
-  @HttpCode(
-    HttpStatus.NO_CONTENT,
-  )
-
+  @HttpCode(HttpStatus.NO_CONTENT)
   async remove(
-
-    @Param(
-      'id',
-      ParseUUIDPipe,
-    )
-
+    @Param('id', ParseUUIDPipe)
     id: string,
-
   ): Promise<void> {
-
-    const found =
-      await this.service
-        .findById(id);
+    const found = await this.service.findById(id);
 
     if (!found) {
-
       throw new HttpException(
-
-        'Formula not found',
+        'Transação não encontrada',
 
         HttpStatus.NOT_FOUND,
       );

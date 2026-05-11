@@ -2,16 +2,19 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  CreateDateColumn,
 } from 'typeorm';
 
-@Entity('formula')
-export class Formula {
-
+@Entity('transacoes_creditos')
+export class TransacaoCreditos {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
+  @Column()
+  carteira!: string;
+
   @Column('float')
-  energia_kwh!: number;
+  energia_consumida_kwh!: number;
 
   @Column({
     default: false,
@@ -34,4 +37,10 @@ export class Formula {
     type: 'date',
   })
   data_carregamento!: string;
+
+  @Column()
+  hash_transacao!: string;
+
+  @CreateDateColumn()
+  criado_em!: Date;
 }
